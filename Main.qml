@@ -32,6 +32,7 @@ Item {
 
     property int uiFadeInterval: parseInt(config.uiFadeInterval || "5") * 1000
     property bool blurWhenUiVisible: config.blurWhenUiVisible !== "false"
+    property bool keepClockVisibleWhenUiHidden: config.keepClockVisibleWhenUiHidden === "true"
 
     LayoutMirroring.enabled: Application.layoutDirection === Qt.RightToLeft
     LayoutMirroring.childrenInherit: true
@@ -104,6 +105,7 @@ Item {
             mainStack: mainStack
             footer: footer
             clock: clock
+            alwaysShowClock: keepClockVisibleWhenUiHidden
         }
 
         DropShadow {
@@ -116,7 +118,7 @@ Item {
             samples: 15
             spread: 0.2
             color : Qt.rgba(0, 0, 0, 0.7)
-            opacity: loginScreenRoot.uiVisible ? 0 : 1
+            opacity: loginScreenRoot.uiVisible || keepClockVisibleWhenUiHidden ? 0 : 1
             Behavior on opacity {
                 OpacityAnimator {
                     duration: Kirigami.Units.veryLongDuration * 2
@@ -130,7 +132,9 @@ Item {
             property Item shadow: clockShadow
             visible: y > 0 && config.showClock === "true"
             anchors.horizontalCenter: parent.horizontalCenter
-            y: (userListComponent.userList.y + mainStack.y)/2 - height/2
+            y: keepClockVisibleWhenUiHidden
+                ? Kirigami.Units.gridUnit * 4
+                : (userListComponent.userList.y + mainStack.y)/2 - height/2
             Layout.alignment: Qt.AlignBaseline
         }
 
