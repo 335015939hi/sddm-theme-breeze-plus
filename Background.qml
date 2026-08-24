@@ -78,8 +78,20 @@ FocusScope {
         showHidden: false
     }
 
-    property int _currentImageIndex: 0
+    property int _currentImageIndex: -1
     property bool _imageAActive: true
+
+    function _randomIndex() {
+        if (wallpaperFolderModel.count <= 1) {
+            return 0;
+        }
+        var idx = Math.floor(Math.random() * wallpaperFolderModel.count);
+        // Avoid picking the same image twice in a row when there are more than one.
+        if (idx === _currentImageIndex) {
+            idx = (idx + 1) % wallpaperFolderModel.count;
+        }
+        return idx;
+    }
 
     function _loadImage(target, index) {
         if (wallpaperFolderModel.count === 0 || index < 0 || index >= wallpaperFolderModel.count) {
@@ -93,7 +105,7 @@ FocusScope {
         if (wallpaperFolderModel.count === 0) {
             return;
         }
-        var nextIndex = (_currentImageIndex + 1) % wallpaperFolderModel.count;
+        var nextIndex = _randomIndex();
         var nextTarget = _imageAActive ? bgImageB : bgImageA;
         _loadImage(nextTarget, nextIndex);
         _imageAActive = !_imageAActive;
@@ -133,7 +145,7 @@ FocusScope {
         if (sceneBackgroundType === "imageDirectory") {
             bgImageA.source = "";
             bgImageB.source = "";
-            _currentImageIndex = 0;
+            _currentImageIndex = -1;
             _imageAActive = true;
             wallpaperFolderModel.folder = Qt.binding(function() {
                 if (sceneBackgroundDirectory === "") return "";
@@ -145,17 +157,26 @@ FocusScope {
         }
     }
 
+    function _setupInitialImages() {
+        if (wallpaperFolderModel.count === 0) {
+            return;
+        }
+        var firstIndex = _randomIndex();
+        _currentImageIndex = firstIndex;
+        _imageAActive = true;
+        _loadImage(bgImageA, firstIndex);
+        if (wallpaperFolderModel.count > 1) {
+            var secondIndex = _randomIndex();
+            _loadImage(bgImageB, secondIndex);
+        }
+        backgroundCycleTimer.restart();
+    }
+
     Connections {
         target: wallpaperFolderModel
         function onCountChanged() {
             if (sceneBackgroundType === "imageDirectory" && wallpaperFolderModel.count > 0) {
-                _currentImageIndex = 0;
-                _imageAActive = true;
-                _loadImage(bgImageA, 0);
-                if (wallpaperFolderModel.count > 1) {
-                    _loadImage(bgImageB, 1);
-                }
-                backgroundCycleTimer.restart();
+                _setupInitialImages();
             }
         }
     }
