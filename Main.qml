@@ -70,19 +70,10 @@ Item {
         onPressed: uiVisible = true;
         onPositionChanged: uiVisible = true;
         onUiVisibleChanged: {
-            if (blockUI) {
-                fadeoutTimer.running = false;
-            } else if (uiVisible) {
-                fadeoutTimer.restart();
-            }
+            fadeoutTimer.restart();
         }
         onBlockUIChanged: {
-            if (blockUI) {
-                fadeoutTimer.running = false;
-                uiVisible = true;
-            } else {
-                fadeoutTimer.restart();
-            }
+            fadeoutTimer.restart();
         }
 
         Keys.onPressed: event => {
@@ -96,10 +87,8 @@ Item {
             running: true
             interval: 60000
             onTriggered: {
-                if (!loginScreenRoot.blockUI) {
-                    userListComponent.mainPasswordBox.showPassword = false;
-                    loginScreenRoot.uiVisible = false;
-                }
+                userListComponent.mainPasswordBox.showPassword = false;
+                loginScreenRoot.uiVisible = false;
             }
         }
         WallpaperFader {
