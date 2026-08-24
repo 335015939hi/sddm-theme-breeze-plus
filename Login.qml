@@ -24,6 +24,7 @@ SessionManagementScreen {
     property real fontSize: Kirigami.Theme.defaultFont.pointSize
 
     signal loginRequest(string username, string password)
+    signal uiActivity()
 
     onShowUsernamePromptChanged: {
         if (!showUsernamePrompt) {
@@ -85,6 +86,8 @@ SessionManagementScreen {
         focus: showUsernamePrompt && !lastUserName //if there's a username prompt it gets focus first, otherwise password does
         placeholderText: i18ndc("plasma-desktop-sddm-theme", "@info:placeholder in textfield", "Username")
 
+        Keys.onPressed: event => root.uiActivity()
+
         onAccepted: {
             if (root.loginScreenUiVisible) {
                 passwordBox.forceActiveFocus()
@@ -121,6 +124,7 @@ SessionManagementScreen {
             //if empty and left or right is pressed change selection in user switch
             //this cannot be in keys.onLeftPressed as then it doesn't reach the password box
             Keys.onPressed: event => {
+                root.uiActivity()
                 if (event.key === Qt.Key_Left && !text) {
                     userList.decrementCurrentIndex();
                     event.accepted = true

@@ -235,6 +235,11 @@ Item {
                     root.notificationMessage = ""
                     sddm.login(username, password, sessionButton.currentIndex)
                 }
+
+                onUiActivity: {
+                    loginScreenRoot.uiVisible = true;
+                    fadeoutTimer.restart();
+                }
             }
 
             Behavior on opacity {
@@ -341,6 +346,11 @@ Item {
                 onLoginRequest: {
                     root.notificationMessage = ""
                     sddm.login(username, password, sessionButton.currentIndex)
+                }
+
+                onUiActivity: {
+                    loginScreenRoot.uiVisible = true;
+                    fadeoutTimer.restart();
                 }
 
                 actionItemsVisible: !inputPanel.keyboardActive
