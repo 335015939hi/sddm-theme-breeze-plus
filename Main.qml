@@ -81,11 +81,11 @@ Item {
             event.accepted = false;
         }
 
-        //takes one full minute for the ui to disappear
+        //takes 2 seconds for the ui to disappear
         Timer {
             id: fadeoutTimer
             running: true
-            interval: 60000
+            interval: 2000
             onTriggered: {
                 userListComponent.mainPasswordBox.showPassword = false;
                 loginScreenRoot.uiVisible = false;
