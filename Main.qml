@@ -30,6 +30,8 @@ Item {
 
     property string notificationMessage
 
+    property int uiFadeInterval: parseInt(config.uiFadeInterval || "5") * 1000
+
     LayoutMirroring.enabled: Application.layoutDirection === Qt.RightToLeft
     LayoutMirroring.childrenInherit: true
 
@@ -84,11 +86,10 @@ Item {
             event.accepted = false;
         }
 
-        //takes 2 seconds for the ui to disappear
         Timer {
             id: fadeoutTimer
             running: true
-            interval: 2000
+            interval: uiFadeInterval
             onTriggered: {
                 userListComponent.mainPasswordBox.showPassword = false;
                 loginScreenRoot.uiVisible = false;
