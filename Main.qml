@@ -49,6 +49,9 @@ Item {
                 sceneBackgroundType: config.type
                 sceneBackgroundColor: config.color
                 sceneBackgroundImage: config.background
+                sceneBackgroundDirectory: config.backgroundDirectory
+                sceneBackgroundInterval: parseInt(config.backgroundInterval || "30") * 1000
+                sceneBackgroundTransition: parseInt(config.backgroundTransition || "1") * 1000
             }
         }
     }
@@ -63,7 +66,7 @@ Item {
         anchors.fill: parent
 
         property bool uiVisible: true
-        property bool blockUI: mainStack.depth > 1 || userListComponent.mainPasswordBox.text.length > 0 || inputPanel.keyboardActive || config.type !== "image"
+        property bool blockUI: mainStack.depth > 1 || userListComponent.mainPasswordBox.text.length > 0 || inputPanel.keyboardActive || (config.type !== "image" && config.type !== "imageDirectory")
 
         hoverEnabled: true
         drag.filterChildren: true
@@ -92,7 +95,7 @@ Item {
             }
         }
         WallpaperFader {
-            visible: config.type === "image"
+            visible: config.type === "image" || config.type === "imageDirectory"
             anchors.fill: parent
             state: loginScreenRoot.uiVisible ? "on" : "off"
             source: wallpaper
