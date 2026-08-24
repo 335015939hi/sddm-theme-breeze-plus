@@ -31,6 +31,7 @@ Item {
     property string notificationMessage
 
     property int uiFadeInterval: parseInt(config.uiFadeInterval || "5") * 1000
+    property bool blurWhenUiVisible: config.blurWhenUiVisible !== "false"
 
     LayoutMirroring.enabled: Application.layoutDirection === Qt.RightToLeft
     LayoutMirroring.childrenInherit: true
@@ -96,7 +97,7 @@ Item {
             }
         }
         WallpaperFader {
-            visible: config.type === "image" || config.type === "imageDirectory"
+            visible: blurWhenUiVisible ? ( config.type === "image" || config.type === "imageDirectory" ) : false
             anchors.fill: parent
             state: loginScreenRoot.uiVisible ? "on" : "off"
             source: wallpaper
